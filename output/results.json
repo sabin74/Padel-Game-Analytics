@@ -1,0 +1,128 @@
+[
+    {
+        "frame": 6,
+        "timestamp": 0.24,
+        "shot": "backhand",
+        "player": "player_1"
+    },
+    {
+        "frame": 26,
+        "timestamp": 1.04,
+        "shot": "serve",
+        "player": "player_1"
+    },
+    {
+        "frame": 28,
+        "timestamp": 1.12,
+        "shot": "backhand",
+        "player": "player_1"
+    },
+    {
+        "frame": 30,
+        "timestamp": 1.2,
+        "shot": "serve",
+        "player": "player_1"
+    },
+    {
+        "frame": 36,
+        "timestamp": 1.44,
+        "shot": "forehand",
+        "player": "player_1"
+    },
+    {
+        "frame": 38,
+        "timestamp": 1.52,
+        "shot": "serve",
+        "player": "player_1"
+    },
+    {
+        "frame": 48,
+        "timestamp": 1.92,
+        "shot": "smash",
+        "player": "player_1"
+    },
+    {
+        "frame": 50,
+        "timestamp": 2.0,
+        "shot": "forehand",
+        "player": "player_1"
+    },
+    {
+        "frame": 70,
+        "timestamp": 2.8,
+        "shot": "smash",
+        "player": "player_1"
+    },
+    {
+        "frame": 82,
+        "timestamp": 3.28,
+        "shot": "forehand",
+        "player": "player_1"
+    },
+    {
+        "frame": 92,
+        "timestamp": 3.68,
+        "shot": "backhand",
+        "player": "player_1"
+    },
+    {
+        "frame": 94,
+        "timestamp": 3.76,
+        "shot": "forehand",
+        "player": "player_1"
+    },
+    {
+        "frame": 102,
+        "timestamp": 4.08,
+        "shot": "backhand",
+        "player": "player_1"
+    },
+    {
+        "frame": 104,
+        "timestamp": 4.16,
+        "shot": "forehand",
+        "player": "player_1"
+    },
+    {
+        "frame": 106,
+        "timestamp": 4.24,
+        "shot": "backhand",
+        "player": "player_1"
+    },
+    {
+        "frame": 108,
+        "timestamp": 4.32,
+        "shot": "forehand",
+        "player": "player_1"
+    },
+    {
+        "frame": 110,
+        "timestamp": 4.4,
+        "shot": "backhand",
+        "player": "player_1"
+    },
+    {
+        "frame": 116,
+        "timestamp": 4.64,
+        "shot": "forehand",
+        "player": "player_1"
+    },
+    {
+        "frame": 122,
+        "timestamp": 4.88,
+        "shot": "backhand",
+        "player": "player_1"
+    },
+    {
+        "frame": 124,
+        "timestamp": 4.96,
+        "shot": "forehand",
+        "player": "player_1"
+    },
+    {
+        "frame": 132,
+        "timestamp": 5.28,
+        "shot": "backhand",
+        "player": "player_1"
+    }
+]
