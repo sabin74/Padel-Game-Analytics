@@ -1,76 +1,28 @@
 """
 classifier.py
-
-Purpose:
-- Classify shots based on motion features
-
-Shot Types:
-- Forehand
-- Backhand
-- Smash
-- Serve (basic detection)
-
-Design Philosophy:
-- Rule-based (fast + explainable)
-- Simple but meaningful
+Rule-based shot classification using ball motion
 """
-
 class ShotClassifier:
     def __init__(self):
-        # Tunable thresholds (IMPORTANT)
-        self.speed_threshold_smash = 20
+        self.speed_threshold_smash = 15   # pixels per frame
         self.speed_threshold_min = 3
 
-    def classify(self, features, positions, frame_id):
-        """
-        Classify shot based on extracted features
-
-        Args:
-            features (dict)
-            positions (list)
-            frame_id (int)
-
-        Returns:
-            shot_label (str or None)
-        """
-
+    def classify(self, features, racket_pos=None, player_box=None, frame_id=0):
         if features is None:
             return None
+        dx = features.get("dx", 0)
+        dy = features.get("dy", 0)
+        speed = features.get("speed", 0)
 
-        dx = features["dx"]
-        dy = features["dy"]
-        speed = features["speed"]
-        angle = features["angle"]
-
-
-        # SMASH DETECTION
-
+        # Smash: high speed + downward
         if speed > self.speed_threshold_smash and dy > 0:
             return "smash"
-
-
-        # SERVE DETECTION (simple)
-
-        # First few frames OR initial downward motion
-        if frame_id < 50 and dy > 0:
+        # Serve: early frames + downward motion
+        if frame_id < 100 and dy > 0:
             return "serve"
-
-
-        # FOREHAND / BACKHAND
-
-
-        # Ignore noise
         if speed < self.speed_threshold_min:
             return None
-
-        # Horizontal movement
+        # Forehand/Backhand by horizontal direction
         if abs(dx) > abs(dy):
-
-            # Direction-based classification
-            if dx > 0:
-                return "forehand"
-            else:
-                return "backhand"
-
+            return "forehand" if dx > 0 else "backhand"
         return None
-
