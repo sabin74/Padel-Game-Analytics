@@ -1,6 +1,6 @@
-ultralytics 
-opencv-python 
-numpy 
-pandas 
+ultralytics
+opencv-python
+numpy
+pandas
 matplotlib
-
+mediapipe==0.10.13
