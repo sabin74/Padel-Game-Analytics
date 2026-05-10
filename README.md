@@ -89,7 +89,7 @@ It will perform the following tasks:
 - Exit the script by clicking the key 'q';
 - Generate the result output video file and JSON/CSV along with the shots graph in `output/` folder.
 
-### 5. Test Individual Components (Optional)
+### 5. Test Individual Components
 
 ```bash
 python test_detection.py      # Check player, ball, racket detection
