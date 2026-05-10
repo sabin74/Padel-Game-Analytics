@@ -2,21 +2,21 @@
 
 ## Project Overview
 
-This project is a computer vision prototype that analyzes a padel match video, detects players, the ball, and the racket, tracks the ball, classifies shots (forehand, backhand, smash, serve), and outputs structured results (JSON/CSV) along with an annotated video and shot analytics.
+This project is a computer vision project that implements the analysis of padel game video, detection of players, ball, and racket, tracking of ball, classification of forehand, backhand, smash, and serves, and, finally, providing the result in JSON/CSV format along with video annotations and shots analytics.
 
-It was built as part of an AI/ML internship assignment for Layman AI. The goal is to demonstrate a practical end‑to‑end pipeline using Python, OpenCV, YOLOv8, and simple rule‑based logic.
+It was developed as part of an internship assignment from Layman AI. The primary goal is to showcase how such a project can be implemented using Python, OpenCV, YOLOv8, and rule-based reasoning.
 
 ## Key Features
 
--   **Detection** – YOLOv8 for players, motion differencing for the ball, heuristic (player’s lower‑right area) for the racket.
--   **Tracking** – Ball trajectory stored in a FIFO buffer, visualised as a line.
--   **Shot Classification** – Rule‑based using speed and direction:
-    - High speed + downward motion → **smash**
-    - Early frames + downward motion → **serve**
-    - Horizontal motion → **forehand** (dx>0) or **backhand** (dx<0)
--   **Output Formats** – JSON and CSV with frame number, timestamp, shot type, and player (fixed as player_1).
--   **Analytics** – Shot count summary and a bar chart (matplotlib).
--   **Video Output** – Overlaid bounding boxes, ball circle, racket dot, trajectory, and shot label, saved as MP4.
+-   **Detection**: YOLOv8 for players, motion difference for the ball, and heuristic for the racket (at the lower-right corner of player).
+-   **Tracking**: Tracking of the ball through its path via a FIFO queue.
+-   **Shot Detection**: Detection of shots through rules involving speed and angles:
+    - High speed and downwards angle of the shot → **Smash**
+    - Shot detected at an early frame and downwards angle → **Serve**
+    - Horizontal angle of the shot → **Forehand** (if the direction is right to left) and **Backhand** (vice versa).
+-   **Output Format**: Output is done in JSON/CSV file format and includes Frame Number, Timestamp, Shot Type, and Player (player_1).
+-   **Analytics**: Counting and plotting shots via a bar graph using matplotlib.
+-   **Video Output**: Drawing of bounding boxes, ball position, racket position, shot path, and shot names for each frame.
 
 ## Repository Structure
 
@@ -55,7 +55,7 @@ cd Padel-Game-Analytics
 
 ### 2. Install Dependencies
 
-Create a virtual environment (recommended) and install the required packages:
+Create a virtual environment and install the required packages:
 
 ```bash
 python -m venv venv
@@ -74,8 +74,8 @@ matplotlib
 
 ### 3. Prepare the Input Video
 
-Place your padel match video in the project root and name it `input_sample_video.mp4`.  
-If you have a different filename, update the `VIDEO_PATH` variable in `main.py`.
+Prepare the file `input_sample_video.mp4` containing the padel match video in the root folder.  
+Use another filename but adjust the `VIDEO_PATH` parameter inside `main.py`.
 
 ### 4. Run the Main Pipeline
 
@@ -83,10 +83,11 @@ If you have a different filename, update the `VIDEO_PATH` variable in `main.py`.
 python main.py
 ```
 
-The script will:
-- Process the video frame by frame (resized to 640x360, processing every 2nd frame).
-- Display a live preview (press `q` to stop early).
-- Write the annotated video, JSON, CSV, and shot distribution plot into the `output/` folder.
+It will perform the following tasks:
+- Process the input video on a frame basis (with size 640x360, considering each second frame);
+- Show a live stream;
+- Exit the script by clicking the key 'q';
+- Generate the result output video file and JSON/CSV along with the shots graph in `output/` folder.
 
 ### 5. Test Individual Components (Optional)
 
@@ -111,14 +112,14 @@ After running `main.py`, the `output/` folder will contain:
 
 ### Methodology
 
-1.  **Detection**  
-    - **Players** – YOLOv8n (pretrained on COCO, class 0 = person). Fast and reliable.  
-    - **Ball** – Frame differencing + contour detection. The moving ball appears as a small blob.  
-    - **Racket** – Since no pretrained model exists, we approximate the racket as the lower‑right area of the first detected player. This satisfies the mandatory requirement without external pose libraries.
+1.  **Detection**
+    - **Players** – Using YOLOv8n (COCO dataset, class 0 = person). Efficient and accurate.
+    - **Ball** – Difference between consecutive frames and contour detection. Ball movement is denoted by small contours.
+    - **Racket** – Since there are no pre-trained models for racket detection, we use the bottom right corner of the first player to comply with the mandatory task without using any external pose estimation tools.
 
-2.  **Tracking** – The ball’s centre is stored in a list (max 30 positions). The trajectory is drawn as a polyline.
+2.  **Tracking** – Coordinates of the center of the ball are recorded in an array up to 30 frames. Path is drawn as a polyline.
 
-3.  **Feature Extraction** – From consecutive ball positions we compute `dx`, `dy`, speed (Euclidean distance), and angle.
+3.  **Feature Extraction** – We compute `dx`, `dy`, velocity (Eucledian distance), and angle from successive locations of the ball.
 
 4.  **Classification (Rule‑Based)** – Simple thresholds that work well for a prototype:  
     - `speed > 15` and `dy > 0` → **smash**  
@@ -133,38 +134,38 @@ After running `main.py`, the `output/` folder will contain:
 
 ### Challenges Faced
 
--   **Ball detection** – The ball is small and fast, causing motion blur. Solved by lowering the threshold on contour area and using Gaussian blur.
--   **Racket detection** – No standard detector available. Used a heuristic (lower right of player) – acceptable for a prototype but not perfect.
--   **Tuning thresholds** – Different videos may need different speed values. Made them configurable in `classifier.py`.
--   **Performance** – Processing every frame is slow on CPU. Added frame skipping (every 2nd frame) and resizing.
+-   **Ball detection**: The ball is small and fast moving. This leads to motion blur. This problem was overcome by reducing the threshold of contour area and performing Gaussian blur.
+-   **Racket detection**: In this case, we do not have any detector to work with. We used heuristics (based on bottom-right part w.r.t player). This is acceptable for our prototype but certainly not the best solution.
+-   **Threshold tuning**: Speeds can vary across videos. We provided adjustment using `classifier.py`.
+-   **Performance**: Each frame takes a long time to process. This is why we slowed down our processing rate and also reduced the frame sizes.
 
 ### Improvements for a Production System
 
--   **Better racket detection** – Train/fine‑tune YOLO on a dataset of padel rackets, or use MediaPipe Pose for wrist landmarks.
--   **Robust tracking** – Use a Kalman filter or SORT to handle occlusions.
--   **Machine learning classifier** – Replace rules with a lightweight CNN or LSTM on cropped player sequences.
--   **Player differentiation** – Assign left/right player IDs based on court zones.
--   **Bounce detection** – Add vertical direction change analysis.
--   **Real‑time dashboard** – Stream analytics with Streamlit or Gradio.
+-   **Improved racket detection** – Use either YOLO training or MediaPipe Pose landmark detection based on wrist joints.
+-   **Player tracking with robustness** – Apply Kalman filter or SORT method.
+-   **Classifier through machine learning** – Deploy either small CNN or LSTM architecture.
+-   **Distinctive player identification** – Assign unique IDs based on their locations on the court.
+-   **Detection of ball bounces** – Incorporate detection of changes in the vertical direction.
+-   **Real-time analytics dashboard** – Offer live analytics via Streamlit or Gradio interfaces.
 
 ## Google Drive Links (Models & Output)
 
-The following files are large and hosted on Google Drive (as required by the assignment):
+The following files are large and hosted on Google Drive:
 
 -   **YOLO model weights** – `yolov8n.pt` (automatically downloaded by Ultralytics; backup link)  
-    [Download from Google Drive](https://drive.google.com/your-yolo-link-here)
+    [Download from Google Drive](https://drive.google.com/file/d/1xYJqXrZPGfBu1HZZg4Nq8Pv_FY5JZlaV/view?usp=sharing)
 
 -   **Sample output video** – `output/output_video.mp4`  
-    [Watch on Google Drive](https://drive.google.com/your-output-video-link-here)
+    [Watch on Google Drive](https://drive.google.com/file/d/15A2uPf2XYQGJw9IPAPAUzR_xjOzKQNT_/view?usp=sharing)
 
 -   **All results (JSON + CSV + chart)** – Zipped folder  
-    [Download from Google Drive](https://drive.google.com/your-zip-link-here)
+    [Download from Google Drive](https://drive.google.com/drive/folders/1D1dn9D_bXfBI0ed0IUBPDXSmB_WTYYG2?usp=sharing)
 
 
 ## Demo Video
 
 A short screen recording demonstrating the system in action is available here:  
-[📺 Watch Demo Video](https://drive.google.com/your-demo-video-link-here)
+[📺 Watch Demo Video](https://drive.google.com/file/d/1d0hwlTLDOCnHxOYsb_BKuIOELAfNtvj5/view?usp=sharing)
 
 The demo shows:
 - Running `python main.py`
@@ -185,4 +186,4 @@ Layman AI Assignment – May 2026
 
 ## License
 
-This code is provided for review purposes as part of a job application. All rights reserved.
+This code is provided for review purposes as part of a internship application. All rights reserved.
